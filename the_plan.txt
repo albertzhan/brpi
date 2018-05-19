@@ -1,0 +1,45 @@
+Client
+|-+Stage 1 (Connecting)
+| |-+Connect rPi to BrPi.tech:8888
+| | |-Digital Ocean droplet running Tornado server
+| | |-Maybe website on port 80?
+| |
+| |-Repeat until connected
+| |-Quit after x attempts
+|
+|-+Stage 2 (Training)
+| |-Take picture of user's face
+| |-Display keyboard to user to input username
+|
+|-+Stage 2.5 (Countdown)
+| |-Show player how much time they have to hide
+| |-Tell them that this time is for them to position themselves and prepare
+|
+|-+Stage 3 (Gameplay)
+| |-Camera button to capture face
+| |-Send image to server
+| |-If someone was killed, put kill on to log
+| |-Camera cooldown
+| |-X amount of lives, if you get hit, you lose one
+| |-Game ends when only one person has lives
+|
+|-+Stage 4 (Stats)?
+| |-When game is over, show player's stats
+
+Server
+|-+Stage 1 (Fill lobby)
+| |-Clients connect and train their faces
+| |-Takes place during connecting and training stage of Client
+|
+|-+Stage 2 (Countdown)
+| |-10 second countdown for players to run around and position themselves
+| |-Send countdown time to players
+|
+|-+Stage 3 (Gameplay)
+| |-Receive image data and find faces within it
+| |-Find valid kills and update clients about their status
+| |-Log kills and accuracy
+| |-If all but 1 player is dead, then end the game
+|
+|-+Stage 4 (Stats)
+| |-Transmit data to all clients and disconnect them
