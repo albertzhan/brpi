@@ -20,13 +20,21 @@ face = None
 timesnr = font.Font("../BurbankBigCondensed-Bold.otf",35)
 camButton = transform.smoothscale(image.load('purple_square.png').convert_alpha(), (80,100))
 takePicButton = Rect(640, 190, 80, 100)
+connected = False
 while running: #this will keep trying to connect the websocket if the websocket dc's
+    screen.fill((0, 0, 0))
     mx, my = mouse.get_pos()
     mb = mouse.get_pressed()[0]
     if stage != 1:
-        screen.fill((0,0,0))
         for ws in websocket.connect(poll=0): # this is essentially the new event loop, it will stop running if the connection is broken
-            if ws.name!='poll':
+            screen.fill((0, 0, 0))
+            if ws.name=='poll':
+                pass
+            elif ws.name == 'connected':
+                connected = True
+            elif ws.name == 'disconnected':
+                connected = False
+            else:
                 print(ws.name)
             mx, my = mouse.get_pos()
             mb = mouse.get_pressed()[0]
@@ -41,8 +49,6 @@ while running: #this will keep trying to connect the websocket if the websocket 
                         websocket.close()
                 mx, my = mouse.get_pos()
                 mb = mouse.get_pressed()[0]
-                stuff, frame = cam.read()
-                pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)),-90)
                 if pictureTaken:
                     screen.fill((130, 130, 230))
                     keyPress = keyboardDisplay.keyboard(screen, 50, 0, 280, mx, my, mb)
@@ -52,7 +58,9 @@ while running: #this will keep trying to connect the websocket if the websocket 
                             if len(name) > 0:
                                 name = name[:len(name) - 1]
                         elif keyPress == 'enter':
-                            pass #send face data to server with name paired to it
+                            out = zlib.compress(pickle.dumps((0,frame, name)))
+                            websocket.send_binary(out)
+                            print('face sent')
                         else:
                             name += keyPress
                         oldKey = keyPress
@@ -64,6 +72,8 @@ while running: #this will keep trying to connect the websocket if the websocket 
                     drawFont = timesnr.render("Name:", True, (255,255,255))
                     screen.blit(drawFont, (360-drawFont.get_width()//2, 200))
                 else:
+                    stuff, frame = cam.read()
+                    pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)), -90)
                     screen.blit(pySurf, (0, 240-pySurf.get_height()//2))
                     screen.blit(camButton, takePicButton.topleft)
                     if takePicButton.collidepoint(mx,my):
@@ -76,12 +86,15 @@ while running: #this will keep trying to connect the websocket if the websocket 
                                 box = Rect(640 - fPos[1], fPos[0], fPos[1] - fPos[3], fPos[2] - fPos[0]).move(-10,-10).inflate(20,20)
                                 newWidth = int(box.width*185/box.height)
                                 face = transform.smoothscale(pySurf.subsurface(box),(newWidth,185))
-                display.flip()
-                clockity.tick(30)
             elif stage == 3:
                 pass
             elif stage == 4:
                pass
+            print(connected)
+            if connected:
+                display.flip()
+                clockity.tick(30)
+        screen.fill((0, 0, 0))
         connectText = buttonFont.render("Connecting...", True, (255,255,255))
         screen.blit(connectText, (360-connectText.get_width()//2,240-connectText.get_height()//2))
         tries+=1
@@ -89,7 +102,11 @@ while running: #this will keep trying to connect the websocket if the websocket 
             print('failed to connect')
             tries = 0
             stage = 1
+        display.flip()
+        clockity.tick(30)
     else:
+        pictureTaken = False
+        name = ''
         for e in event.get():
             if e.type == QUIT:
                 running = False
