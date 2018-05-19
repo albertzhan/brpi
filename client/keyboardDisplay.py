@@ -5,7 +5,7 @@ font.init()
 
 height = 60
 
-timesnr = font.Font("BurbankBigCondensed-Bold.otf",35)
+timesnr = font.Font("../BurbankBigCondensed-Bold.otf",35)
 
 def keyboard(surface, height,x,y,mx,my,mb):
     letters = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ._")
