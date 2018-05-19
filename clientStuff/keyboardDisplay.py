@@ -38,6 +38,15 @@ def keyboard(surface, height,x,y,mx,my,mb):
             draw.rect(surface,col,(x+541+j*60,y+1+i*height,58,height-2))
             textSurface = timesnr.render(n,True,(0,0,0))
             surface.blit(textSurface,(571-textSurface.get_width()//2+j*60,height//2-textSurface.get_height()//2+i*height+y))
+    col = (230,230,230)
+    if Rect(421+x,1+y,118,height-2).collidepoint(mx,my):
+        col = (200,200,200)
+        if mb:
+            pressed = "backspace"
+    draw.rect(surface,col,(421+x,1+y,118,height-2))
+    textSurface = timesnr.render("<---",True,(0,0,0))
+    surface.blit(textSurface,(x+481-textSurface.get_width()//2,y+height//2-textSurface.get_height()//2))
+
     return pressed
 if __name__=="__main__":
     screen = display.set_mode((720, height * 4))
@@ -51,7 +60,7 @@ if __name__=="__main__":
         mx,my = mouse.get_pos()
         mb = mouse.get_pressed()
         clicked = 0 if mb == (0,0,0) else 1
-        keyboard(screen, height,0,0,mx,my,clicked)
+        keyboard(screen,height,0,0,mx,my,clicked)
 
         display.flip()
     quit()
