@@ -2,19 +2,19 @@ import cv2, numpy, zlib, pickle
 from pygame import *
 from lomond import WebSocket
 from lomond.persist import persist
-font.init()
+#font.init()
 connected = False
-websocket = WebSocket('ws://192.168.31.223:8888')
+websocket = WebSocket('ws://localhost:8888/brpi')
 clockity=time.Clock()
 screen = display.set_mode((640,480))
-text = font.SysFont('consolas',30)
+#text = font.SysFont('consolas',30)
 cam = cv2.VideoCapture(0)
 for evt in websocket.connect(poll=0):
     if evt.name=='text':
         print('received:', evt.text)
     elif evt.name == 'ready':
         connected = True
-        websocket.send_text('hi')
+        #websocket.send_text('hi')
     elif evt.name == 'poll':
         pass
     elif evt.name == 'closed' or evt.name=='connect_fail' or evt.name=='disconnected':

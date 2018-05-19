@@ -1,6 +1,7 @@
 import tornado.websocket, tornado.ioloop, tornado.web
 import client
 import time
+import pickle, zlib
 clients = {} #each socket object points to [client object, face encoding, name]
 
 ftimer = 0 #tracking time
@@ -11,6 +12,7 @@ def periodic_callback():
     print("hi")
     if ftimer > 1:
         ftimer -= 1
+        print(ftimer)
     elif ftimer == 1:
         stage = "countdown"
         ctdtimer = 11
@@ -26,8 +28,8 @@ class wsHandler(tornado.websocket.WebSocketHandler):
     global ftimer,stage
     def open(self):
         if stage == "fill":
-            clients[self] = [client.Client(self),null,null]
-            ftimer = 31 #30sec delay to start the game
+            clients[self] = [client.Client(self),None,None]
+            ftimer = 6 #30sec delay to start the game
             print("one")
             self.write_message(str((0,stage)))
         else:
@@ -36,7 +38,8 @@ class wsHandler(tornado.websocket.WebSocketHandler):
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
-        message = pickle.loads(zlib.decompress(message)) #unpacking
+        message = pickle.loads(
+                zlib.decompress(message)) #unpacking
         if message[0] == 0:# set sockets links to faces and names
             clients[self][1] = face_recognition.face_encodings(message[1])[0]
             clients[self][2] = message[2] #this is the name
