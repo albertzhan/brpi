@@ -9,12 +9,13 @@ ctdtimer = 0
 stage = "fill" ##"countdown" "game"
 def periodic_callback():
     global ftimer, ctdtimer
-    print("hi")
+    print("hi",ftimer)
     if ftimer > 1:
         ftimer -= 1
         print(ftimer)
     elif ftimer == 1:
         stage = "countdown"
+        ftimer -= 1
         ctdtimer = 11
         print("countdown started")
     if ctdtimer > 1:
@@ -25,16 +26,17 @@ def periodic_callback():
         
         
 class wsHandler(tornado.websocket.WebSocketHandler):
-    global ftimer,stage
     def open(self):
+        global ftimer,stage
         if stage == "fill":
             clients[self] = [client.Client(self),None,None]
-            ftimer = 6 #30sec delay to start the game
-            print("one")
+            ftimer += 6 #30sec delay to start the game
+            print("one",ftimer)
             self.write_message(str((0,stage)))
         else:
             self.write_message("you are too late")
     def on_message(self, message):
+        global ftimer,stage
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
@@ -44,7 +46,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
             clients[self][1] = face_recognition.face_encodings(message[1])[0]
             clients[self][2] = message[2] #this is the name
             self.write_message("face registered")
-        if message[1] == 0: #this is a picture shot
+        if message[0] == 1: #this is a picture shot
 ##            registerHit(self,message[1])
             
         
