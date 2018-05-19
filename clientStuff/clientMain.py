@@ -21,6 +21,10 @@ timesnr = font.Font("../BurbankBigCondensed-Bold.otf",35)
 camButton = transform.smoothscale(image.load('purple_square.png').convert_alpha(), (80,100))
 takePicButton = Rect(640, 190, 80, 100)
 connected = False
+headOutline = image.load('Head.png').convert_alpha()
+headRatio = headOutline.get_width()/headOutline.get_height()
+headOutline = transform.smoothscale(headOutline, (int(headRatio*400), 400))
+takePicImage = transform.smoothscale(image.load('cartooncamera.png').convert_alpha(),(68,45))
 while running: #this will keep trying to connect the websocket if the websocket dc's
     screen.fill((0, 0, 0))
     mx, my = mouse.get_pos()
@@ -30,6 +34,8 @@ while running: #this will keep trying to connect the websocket if the websocket 
             screen.fill((0, 0, 0))
             if ws.name=='poll':
                 pass
+            elif ws.name == 'text':
+                pass #wait for more deeeeets
             elif ws.name == 'connected':
                 connected = True
             elif ws.name == 'disconnected':
@@ -60,6 +66,7 @@ while running: #this will keep trying to connect the websocket if the websocket 
                         elif keyPress == 'enter':
                             out = zlib.compress(pickle.dumps((0,frame, name)))
                             websocket.send_binary(out)
+                            stage = 3
                             print('face sent')
                         else:
                             name += keyPress
@@ -75,22 +82,23 @@ while running: #this will keep trying to connect the websocket if the websocket 
                     stuff, frame = cam.read()
                     pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)), -90)
                     screen.blit(pySurf, (0, 240-pySurf.get_height()//2))
+                    screen.blit(headOutline, (360-headOutline.get_width()//2, 240-headOutline.get_height()//2))
                     screen.blit(camButton, takePicButton.topleft)
+                    screen.blit(takePicImage, (takePicButton.centerx-takePicImage.get_width()//2, takePicButton.centery-takePicImage.get_height()//2))
                     if takePicButton.collidepoint(mx,my):
                         if mb:
                             faces = face_recognition.face_locations(frame)
                             if len(faces)>0:
                                 fPos = faces[0]
                                 pictureTaken = True
-                                print(fPos)
                                 box = Rect(640 - fPos[1], fPos[0], fPos[1] - fPos[3], fPos[2] - fPos[0]).move(-10,-10).inflate(20,20)
                                 newWidth = int(box.width*185/box.height)
                                 face = transform.smoothscale(pySurf.subsurface(box),(newWidth,185))
             elif stage == 3:
-                pass
+                waitingText = timesnr.render("Awaiting Countdown...",True,(255,255,255))
+                screen.blit(waitingText, (360-waitingText.get_width()//2,240-waitingText.get_height()//2))
             elif stage == 4:
                pass
-            print(connected)
             if connected:
                 display.flip()
                 clockity.tick(30)
