@@ -3,7 +3,7 @@ from lomond import websocket
 from pygame import *
 init()
 font.init()
-websocket = websocket.WebSocket("ws://localhost:8888/brpi")
+websocket = websocket.WebSocket("ws://192.168.137.102:8888/brpi")
 running = True
 screen = display.set_mode((720,480))
 cam = cv2.VideoCapture(0)
@@ -25,6 +25,9 @@ headOutline = image.load('Head.png').convert_alpha()
 headRatio = headOutline.get_width()/headOutline.get_height()
 headOutline = transform.smoothscale(headOutline, (int(headRatio*400), 400))
 takePicImage = transform.smoothscale(image.load('cartooncamera.png').convert_alpha(),(68,45))
+timeRemaining = 30
+awaitcountDownStarted = False
+countDownstarted = False
 while running: #this will keep trying to connect the websocket if the websocket dc's
     screen.fill((0, 0, 0))
     mx, my = mouse.get_pos()
@@ -35,7 +38,13 @@ while running: #this will keep trying to connect the websocket if the websocket 
             if ws.name=='poll':
                 pass
             elif ws.name == 'text':
-                pass #wait for more deeeeets
+                tDat = ws.text.split()
+                if tDat[0] == 'awaitcountdown':
+                    awaitcountDownStarted = True
+                    timeRemaining = int(tDat[1])
+                elif tDat[0] == 'countDown':
+                    countDownstarted = True
+                    timeRemaining = int(tDat[1])
             elif ws.name == 'connected':
                 connected = True
             elif ws.name == 'disconnected':
@@ -95,8 +104,20 @@ while running: #this will keep trying to connect the websocket if the websocket 
                                 newWidth = int(box.width*185/box.height)
                                 face = transform.smoothscale(pySurf.subsurface(box),(newWidth,185))
             elif stage == 3:
+                for e in event.get():
+                    if e.type==QUIT:
+                        running = False
+                        websocket.close()
                 waitingText = timesnr.render("Awaiting Countdown...",True,(255,255,255))
                 screen.blit(waitingText, (360-waitingText.get_width()//2,240-waitingText.get_height()//2))
+                if countDownstarted:
+                    awaitingCountDownText = buttonFont.render("Use this time to hide!", True, (255, 255, 255))
+                    screen.blit(awaitingCountDownText, (360-awaitingCountDownText.get_width()//2, 270-awaitingCountDownText.get_height()//2))
+                    awaitingCountDownText = buttonFont.render(str(timeRemaining), True, (255, 255, 255))
+                    screen.blit(awaitingCountDownText, (360-awaitingCountDownText.get_width()//2, 300-awaitingCountDownText.get_height()//2))
+                elif awaitcountDownStarted:
+                    awaitingCountDownText = buttonFont.render(str(timeRemaining), True, (255, 255, 255))
+                    screen.blit(awaitingCountDownText, (360-awaitingCountDownText.get_width()//2, 270-awaitingCountDownText.get_height()//2))
             elif stage == 4:
                pass
             if connected:
