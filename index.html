@@ -21,11 +21,11 @@
 $(document).ready(function(){
 	var x = 275;
 	var y = 245;
-	var offset = $("#bg").offset();
 	var mx = 0;
 	var my = 0;
 	var overbutton = false;
 	$( document ).on( "mousemove", function( e ) {
+		var offset = $("#bg").offset();
   		mx = (e.pageX - offset.left);
 		my = (e.pageY - offset.top);
 		$("#bg").attr("src","Website_pg1.png");
