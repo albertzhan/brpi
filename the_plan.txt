@@ -1,7 +1,7 @@
 Client
 |-+Stage 1 (Connecting)
 | |-+Connect rPi to BrPi.tech:8888
-| | |-Digital Ocean droplet running Tornado server
+| | |-Hasura VM running Tornado server
 | | |-Maybe website on port 80?
 | |
 | |-Repeat until connected
@@ -22,6 +22,9 @@ Client
 | |-Camera cooldown
 | |-X amount of lives, if you get hit, you lose one
 | |-Game ends when only one person has lives
+| |-+If user is killed, they become invulnerable and can't shoot until invuln is over
+| | |-Similar to laser tag death
+| 
 |
 |-+Stage 4 (Stats)?
 | |-When game is over, show player's stats
@@ -43,3 +46,10 @@ Server
 |
 |-+Stage 4 (Stats)
 | |-Transmit data to all clients and disconnect them
+
+Message Types
+|-+From Server, To Client
+| |-Hello, you've connected successfully
+| |-Face Trained Successfully
+| |-Face training failed
+| |-
