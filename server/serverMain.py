@@ -14,7 +14,7 @@ ctdtimer = 0
 stage = "fill" ##"countdown" "game"
 klog = ""
 def registerHit(facestuffs):
-    globol faces, names
+    global faces, names
     face_locations = face_recognition.face_locations(facestuffs)#figure out the location of faces
     unknown_encodings = face_recognition.face_encodings(facestuffs,knows_face_locations=face_locations)
     found = []
@@ -29,7 +29,6 @@ def registerHit(facestuffs):
                 
 def periodic_callback():
     global ftimer, ctdtimer, faces, names
-    print("ftimer: ",ftimer)
     if ftimer > 1:
         ftimer -= 1
         print(ftimer)
@@ -42,7 +41,6 @@ def periodic_callback():
             allFaced = False
     if len(clients) < 2:
         allFaced = False
-    print(allFaced)
     if ftimer == 0 and allFaced:
         ftimer = 31
     if not allFaced:
