@@ -1,4 +1,4 @@
-import cv2, keyboardDisplay, zlib, pickle
+import cv2, keyboardDisplay, zlib, pickle, face_recognition
 from lomond import websocket
 from pygame import *
 init()
@@ -16,7 +16,10 @@ connectScreen = transform.smoothscale(image.load('HomeScr-Scaled.png').convert()
 connectButton = Rect(230, 200, 260,100)
 name = ""
 pictureTaken = False
+face = None
 timesnr = font.Font("../BurbankBigCondensed-Bold.otf",35)
+camButton = transform.smoothscale(image.load('purple_square.png').convert_alpha(), (80,100))
+takePicButton = Rect(640, 190, 80, 100)
 while running: #this will keep trying to connect the websocket if the websocket dc's
     mx, my = mouse.get_pos()
     mb = mouse.get_pressed()[0]
@@ -31,12 +34,11 @@ while running: #this will keep trying to connect the websocket if the websocket 
                 if e.type == QUIT:
                     running = False
                     websocket.close()
-                if e.type == KEYDOWN:
-                    pictureTaken = True
             if stage == 2:
                 stuff, frame = cam.read()
-                pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)), -90)
+                pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)),-90)
                 if pictureTaken:
+                    screen.fill((130, 130, 230))
                     keyPress = keyboardDisplay.keyboard(screen, 50, 0, 280, mx, my, mb)
                     if keyPress != None and keyPress != oldKey:
                         print(keyPress)
@@ -50,8 +52,23 @@ while running: #this will keep trying to connect the websocket if the websocket 
                         oldKey = ''
                     draw.rect(screen, (255, 255, 255), (0, 245, 720, 35))
                     screen.blit(timesnr.render(name, True, (0, 0, 0)), (0, 245))
+                    screen.blit(face, (360-face.get_width()//2, 10))
+                    drawFont = timesnr.render("Name:", True, (255,255,255))
+                    screen.blit(drawFont, (360-drawFont.get_width()//2, 200))
                 else:
-                    screen.blit(pySurf, (0, 0))
+                    screen.blit(pySurf, (0, 240-pySurf.get_height()//2))
+                    screen.blit(camButton, takePicButton.topleft)
+                    if takePicButton.collidepoint(mx,my):
+                        if mb:
+                            faces = face_recognition.face_locations(frame)
+                            if len(faces)>0:
+                                fPos = faces[0]
+                                pictureTaken = True
+                                print(fPos)
+                                box = Rect(640 - fPos[1], fPos[0], fPos[1] - fPos[3], fPos[2] - fPos[0]).move(-10,-10).inflate(20,20)
+                                newWidth = int(box.width*185/box.height)
+                                face = transform.smoothscale(pySurf.subsurface(box),(newWidth,185))
+                            #face = frame
 
                 display.flip()
                 clockity.tick(30)
