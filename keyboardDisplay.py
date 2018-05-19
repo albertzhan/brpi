@@ -27,6 +27,8 @@ def keyboard(height,x,y,mx,my,mb):
     for i in range(4):
         for j in range(3):
             n = numpad[i*3+j]
+            if n in ["*","#"]:
+                continue
             col = (230,230,230)
             if Rect(x+541+j*60,y+1+i*height,58,height-2).collidepoint(mx,my):
                 col = (200,200,200)
