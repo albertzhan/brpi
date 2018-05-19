@@ -7,7 +7,7 @@ def periodic_callback():
 class wsHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         clients[self] = client.Client(self)
-        self.write_message((0,stage))
+        self.write_message(str((0,stage)))
     def on_message(self, message):
         pass
     def on_close(self):
