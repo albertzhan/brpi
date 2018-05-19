@@ -73,7 +73,7 @@ while running: #this will keep trying to connect the websocket if the websocket 
     else:
         for e in event.get():
             if e.type == QUIT:
-                running = false
+                running = False
                 websocket.close()
         screen.blit(connectScreen, (0,0))
         if connectButton.collidepoint(mx,my):
