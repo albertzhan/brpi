@@ -46,6 +46,14 @@ def keyboard(surface, height,x,y,mx,my,mb):
     draw.rect(surface,col,(421+x,1+y,118,height-2))
     textSurface = timesnr.render("<---",True,(0,0,0))
     surface.blit(textSurface,(x+481-textSurface.get_width()//2,y+height//2-textSurface.get_height()//2))
+    col = (230,230,230)
+    if Rect(421+x,height+1+y,118,height-2).collidepoint(mx,my):
+        col = (200,200,200)
+        if mb:
+            pressed = "enter"
+    draw.rect(surface,col,(421+x,height+1+y,118,height-2))
+    textSurface = timesnr.render("Enter",True,(0,0,0))
+    surface.blit(textSurface,(x+481-textSurface.get_width()//2,height+y+height//2-textSurface.get_height()//2))
 
     return pressed
 if __name__=="__main__":

@@ -32,6 +32,8 @@ while running: #this will keep trying to connect the websocket if the websocket 
             if keyPress == "backspace":
                 if len(name) > 0:
                     name = name[:len(name)-1]
+            elif keyPress == "enter":
+                pass #do stuff with enter here
             else:
                 name += keyPress
             oldKey = keyPress
