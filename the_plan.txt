@@ -1,5 +1,5 @@
 Client
-|-+Stage 1 (Connecting)
+|-+Stage 1 (Connecting) //FINISHED!!!
 | |-+Connect rPi to BrPi.tech:8888
 | | |-Hasura VM running Tornado server
 | | |-Maybe website on port 80?
@@ -11,11 +11,11 @@ Client
 | |-Take picture of user's face
 | |-Display keyboard to user to input username
 |
-|-+Stage 2.5 (Countdown)
+|-+Stage 3 (Countdown)
 | |-Show player how much time they have to hide
 | |-Tell them that this time is for them to position themselves and prepare
 |
-|-+Stage 3 (Gameplay)
+|-+Stage 4 (Gameplay)
 | |-Camera button to capture face
 | |-Send image to server
 | |-If someone was killed, put kill on to log
