@@ -35,6 +35,12 @@ while running: #this will keep trying to connect the websocket if the websocket 
                     running = False
                     websocket.close()
             if stage == 2:
+                for e in event.get():
+                    if e.type == QUIT:
+                        running = False
+                        websocket.close()
+                mx, my = mouse.get_pos()
+                mb = mouse.get_pressed()[0]
                 stuff, frame = cam.read()
                 pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)),-90)
                 if pictureTaken:
@@ -45,6 +51,8 @@ while running: #this will keep trying to connect the websocket if the websocket 
                         if keyPress == "backspace":
                             if len(name) > 0:
                                 name = name[:len(name) - 1]
+                        elif keyPress == 'enter':
+                            pass #send face data to server with name paired to it
                         else:
                             name += keyPress
                         oldKey = keyPress
@@ -68,8 +76,6 @@ while running: #this will keep trying to connect the websocket if the websocket 
                                 box = Rect(640 - fPos[1], fPos[0], fPos[1] - fPos[3], fPos[2] - fPos[0]).move(-10,-10).inflate(20,20)
                                 newWidth = int(box.width*185/box.height)
                                 face = transform.smoothscale(pySurf.subsurface(box),(newWidth,185))
-                            #face = frame
-
                 display.flip()
                 clockity.tick(30)
             elif stage == 3:
@@ -87,6 +93,7 @@ while running: #this will keep trying to connect the websocket if the websocket 
         for e in event.get():
             if e.type == QUIT:
                 running = False
+                websocket.close()
         screen.blit(connectScreen, (0,0))
         if connectButton.collidepoint(mx,my):
             draw.rect(screen, (255,255,0), connectButton)
@@ -96,7 +103,7 @@ while running: #this will keep trying to connect the websocket if the websocket 
             draw.rect(screen, (140,120,220), connectButton)
         connectRender = buttonFont.render("Connect", True, (255,255,255))
         screen.blit(connectRender, (connectButton.centerx-connectRender.get_width()//2, connectButton.centery-connectRender.get_height()//2))
-    display.flip()
-    clockity.tick(30)
+        display.flip()
+        clockity.tick(30)
 cam.release()
 quit()

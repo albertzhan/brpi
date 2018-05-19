@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93534d3e-f420-405d-a2aa-d0eb41ff3590" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/clientStuff/purple_square.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/clientStuff/clientMain.py" afterPath="$PROJECT_DIR$/clientStuff/clientMain.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/clientStuff/keyboardDisplay.py" afterPath="$PROJECT_DIR$/clientStuff/keyboardDisplay.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/serverMain.py" afterPath="$PROJECT_DIR$/server/serverMain.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,7 +17,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/brpi$keyboardDisplay.coverage" NAME="keyboardDisplay Coverage Results" MODIFIED="1526748181018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/brpi$serverMain__1_.coverage" NAME="serverMain (1) Coverage Results" MODIFIED="1526752875798" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
-    <SUITE FILE_PATH="coverage/brpi$clientMain.coverage" NAME="clientMain Coverage Results" MODIFIED="1526756216349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/clientStuff" />
+    <SUITE FILE_PATH="coverage/brpi$clientMain.coverage" NAME="clientMain Coverage Results" MODIFIED="1526756434796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/clientStuff" />
     <SUITE FILE_PATH="coverage/brpi$keyboardDisplay__1_.coverage" NAME="keyboardDisplay (1) Coverage Results" MODIFIED="1526748582057" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
     <SUITE FILE_PATH="coverage/brpi$serverMain.coverage" NAME="serverMain Coverage Results" MODIFIED="1526748149966" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/brpi$clientMain__1_.coverage" NAME="clientMain (1) Coverage Results" MODIFIED="1526749218893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
@@ -36,8 +37,8 @@
       <file leaf-file-name="clientMain.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/clientStuff/clientMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="56" column="75" lean-forward="false" selection-start-line="56" selection-start-column="75" selection-end-line="56" selection-end-column="75" />
+            <state relative-caret-position="169">
+              <caret line="54" column="81" lean-forward="false" selection-start-line="54" selection-start-column="81" selection-end-line="54" selection-end-column="81" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
               </folding>
@@ -50,7 +51,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-7">
               <caret line="3" column="9" lean-forward="true" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
-              <folding />
+              <folding>
+                <marker date="1526756319242" expanded="true" signature="157:2414" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -92,8 +95,8 @@
       <file leaf-file-name="serverMain.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/serverMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+            <state relative-caret-position="912">
+              <caret line="57" column="29" lean-forward="false" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
               </folding>
@@ -636,8 +639,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/serverMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        <state relative-caret-position="912">
+          <caret line="57" column="29" lean-forward="false" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
           <folding>
             <element signature="e#0#53#0" expanded="true" />
           </folding>
@@ -676,7 +679,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-7">
           <caret line="3" column="9" lean-forward="true" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
-          <folding />
+          <folding>
+            <marker date="1526756319242" expanded="true" signature="157:2414" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -690,8 +695,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/clientStuff/clientMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="56" column="75" lean-forward="false" selection-start-line="56" selection-start-column="75" selection-end-line="56" selection-end-column="75" />
+        <state relative-caret-position="169">
+          <caret line="54" column="81" lean-forward="false" selection-start-line="54" selection-start-column="81" selection-end-line="54" selection-end-column="81" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
           </folding>
