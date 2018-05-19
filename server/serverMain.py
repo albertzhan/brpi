@@ -3,18 +3,26 @@ import client
 import time
 import pickle, zlib
 clients = {} #each socket object points to [client object, face encoding, name]
-
+faces = []
+names = []
 ftimer = 0 #tracking time
 ctdtimer = 0
 stage = "fill" ##"countdown" "game"
 def periodic_callback():
-    global ftimer, ctdtimer
+    global ftimer, ctdtimer, faces, names
     print("hi",ftimer)
     if ftimer > 1:
         ftimer -= 1
         print(ftimer)
     elif ftimer == 1:
         stage = "countdown"
+
+        
+        for c in clients:
+            faces.append(clients[c][1]) #create the indexed faces names
+            names.append(clients[c][2])
+
+            
         ftimer -= 1
         ctdtimer = 11
         print("countdown started")
@@ -22,7 +30,7 @@ def periodic_callback():
         ctdtimer -= 1
     elif ctdtimer == 1:
         stage = "game"
-        print("game started")
+        print("game started", faces,names)
         
         
 class wsHandler(tornado.websocket.WebSocketHandler):
@@ -30,13 +38,13 @@ class wsHandler(tornado.websocket.WebSocketHandler):
         global ftimer,stage
         if stage == "fill":
             clients[self] = [client.Client(self),None,None]
-            ftimer += 6 #30sec delay to start the game
+            ftimer = 30 #30sec delay to start the game
             print("one",ftimer)
             self.write_message(str((0,stage)))
         else:
             self.write_message("you are too late")
     def on_message(self, message):
-        global ftimer,stage
+        global ftimer,stage, names, faces
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
