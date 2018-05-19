@@ -5,16 +5,17 @@ init()
 font.init()
 websocket = websocket.WebSocket("ws://localhost:8888/brpi")
 running = True
-screen = display.set_mode((720,515))
+screen = display.set_mode((720,480))
 cam = cv2.VideoCapture(0)
 clockity = time.Clock()
 oldKey = ""
-stage = 4
 tries = 0
+stage = 1
 buttonFont = font.Font("../BurbankBigCondensed-Bold.otf",30)
 connectScreen = transform.smoothscale(image.load('HomeScr-Scaled.png').convert(),screen.get_size())
 connectButton = Rect(230, 200, 260,100)
 name = ""
+pictureTaken = False
 timesnr = font.Font("../BurbankBigCondensed-Bold.otf",35)
 while running: #this will keep trying to connect the websocket if the websocket dc's
     mx, my = mouse.get_pos()
@@ -30,31 +31,34 @@ while running: #this will keep trying to connect the websocket if the websocket 
                 if e.type == QUIT:
                     running = False
                     websocket.close()
+                if e.type == KEYDOWN:
+                    pictureTaken = True
             if stage == 2:
-                pass
+                stuff, frame = cam.read()
+                pySurf = transform.rotate(surfarray.make_surface(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)), -90)
+                if pictureTaken:
+                    keyPress = keyboardDisplay.keyboard(screen, 50, 0, 280, mx, my, mb)
+                    if keyPress != None and keyPress != oldKey:
+                        print(keyPress)
+                        if keyPress == "backspace":
+                            if len(name) > 0:
+                                name = name[:len(name) - 1]
+                        else:
+                            name += keyPress
+                        oldKey = keyPress
+                    elif keyPress == None:
+                        oldKey = ''
+                    draw.rect(screen, (255, 255, 255), (0, 245, 720, 35))
+                    screen.blit(timesnr.render(name, True, (0, 0, 0)), (0, 245))
+                else:
+                    screen.blit(pySurf, (0, 0))
+
+                display.flip()
+                clockity.tick(30)
             elif stage == 3:
                 pass
             elif stage == 4:
-                stuff, frame = cam.read()
-                pySurf = transform.rotate(surfarray.make_surface(
-                    cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                ), -90)
-                screen.blit(pySurf, (0, 0))
-                keyPress = keyboardDisplay.keyboard(screen, 50, 0, 280, mx, my, mb)
-                if keyPress != None and keyPress != oldKey:
-                    print(keyPress)
-                    if keyPress == "backspace":
-                        if len(name) > 0:
-                            name = name[:len(name) - 1]
-                    else:
-                        name += keyPress
-                    oldKey = keyPress
-                elif keyPress == None:
-                    oldKey = ''
-                display.flip()
-                clockity.tick(30)
-                draw.rect(screen, (180, 180, 180), (0, 480, 720, 35))
-                screen.blit(timesnr.render(name, True, (0, 0, 0)), (0, 480))
+               pass
         connectText = buttonFont.render("Connecting...", True, (255,255,255))
         screen.blit(connectText, (360-connectText.get_width()//2,240-connectText.get_height()//2))
         tries+=1
