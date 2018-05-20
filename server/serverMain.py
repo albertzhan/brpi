@@ -26,7 +26,7 @@ def registerHit(facestuffs):
         results = face_recognition.compare_faces(faces, i, tolerance = 0.4125)
         for k,l in zip(names,results):
             if l:
-                print('hit %s'%k)
+                print('hit: %s'%k)
                 found.append(k)
     return found
 ##
@@ -135,19 +135,19 @@ class wsHandler(tornado.websocket.WebSocketHandler):
                 print(clients[self][2])
  #               i = names.index(clients[c][2])
                 for j in range (len(names)):
-                    if names[j] == clients[self][2]:
+                    if names[j] == clients[c][2]:
                         i = j
                 if names[i] in hit: #check if this mans got hit
                     if time.time() - lastHitTime[i]> 5.5: #actually deal damage to the guy
                         lastHitTime[i] = time.time() #invulnerability
                         c.write_message("hitted")
-                        print("hit " + names[i] + " " + str(healths[i]))
+                        print("hit-" + names[i] + " " + str(healths[i]))
                         healths[i] -= 1
                         if healths[i] == 0: #killed someone
                             print("killed "+names[i])
                             healths[i] = 0-rank
                             for c in clients:
-                                c.write_message("kill " + names[i] + clients[self][2])
+                                c.write_message("kill " + names[i] +" "+ clients[self][2])
                                 klog = klog + clients[self][2] + " killed " + names[i] + "\n"
                                 print(clients[self][2] + " killed " + names[i])
                                 kills[names.index(clients[self][2])] += 1
