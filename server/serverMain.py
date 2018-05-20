@@ -8,10 +8,14 @@ names = []
 healths = []#1,2 or 3 hearts left. once dead, -1
 submitted = []
 hit = []
+kills = []
 lastHitTime = []
+
+rank = 1
+
 ftimer = 0 #tracking time
 ctdtimer = 0
-stage = "fill" ##"countdown" "game"
+stage = "fill" ##"countdown" "game" "end"
 klog = ""
 def registerHit(facestuffs):
     global faces, names
@@ -26,9 +30,24 @@ def registerHit(facestuffs):
                 found.append(k)
     return found
 
+def checkGameEnd():
+    c = 0
+    for k in healths:
+        if k > 0:
+            c += 1
+    if c <2 : #game is ended
+        for c in clients:
+            myi = names.index(clients[c][2])
+            #rank, kills, hits, submitted(fired)
+            c.write_message("endgame rank "+str(-1*rank[myi])+" kills "+str(kills[myi])+" hits "+str(hits[myi])+" submitted "+str(submitted[myi]))
+            stage = "endgame"        
+        
                 
 def periodic_callback():
     global ftimer, ctdtimer, faces, names
+
+    checkGameEnd()
+    
     if ftimer > 1:
         ftimer -= 1
         print(ftimer)
@@ -56,6 +75,7 @@ def periodic_callback():
             submitted.append(0)
             hit.append(0)
             lastHitTime.append(0)
+            kills.append(0)
 
             
         ftimer = -1
@@ -83,7 +103,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
             self.write_message("you are too late")
             self.close()
     def on_message(self, message):
-        global ftimer,stage, names, faces
+        global ftimer,stage, names, faces, rank
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
@@ -100,19 +120,21 @@ class wsHandler(tornado.websocket.WebSocketHandler):
             if len(hit) > 0:
                 hit[names.index(clients[self][2])] += 1
                 self.write_message("hit")
+            rank += len(hit)
             for c in clients:
                 if clients[c][2] in hit:
                     c.write_message("hitted")
             for i in range(len(names)):
                 if names[i] in hit:
-                    if time.time() - lastHitTime[i]> 5.5:
+                    if time.time() - lastHitTime[i]> 5.5: #actually deal damage to the guy
                         lastHitTime[i] = time.time() #invulnerability
                         healths[i] -= 1
-                        if healths[i] == 0:
-                            healths[i] = -1
+                        if healths[i] == 0: #killed someone
+                            healths[i] = 0-rank
                             for c in clients:
                                 c.write_message("kill killed " + names[i] + " killer " + clients[self][2])
                                 klog = klog + clients[self][2] + " killed " + names[i] + "\n"
+                                kills[names.index(clients[self][2])] += 1
     def on_close(self):
         del clients[self]
 
