@@ -163,7 +163,9 @@ while running: #this will keep trying to connect the websocket if the websocket 
                 screen.blit(pySurf, (0, 240 - pySurf.get_height() // 2))
                 screen.blit(uiTransparent, (0,0))
                 if len(killQueue) > 0:
+                    print('killed')
                     if killQueue[0][2] > 0:
+                        print('killfeed')
                         if killQueue[0][0] == name:
                             stage = 5
                             dead = True
