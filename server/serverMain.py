@@ -121,13 +121,12 @@ class wsHandler(tornado.websocket.WebSocketHandler):
                 hit[names.index(clients[self][2])] += 1
                 self.write_message("hit")
             rank += len(hit)
-            for c in clients:
-                if clients[c][2] in hit:
-                    c.write_message("hitted")
-            for i in range(len(names)):
-                if names[i] in hit:
+            for c in clients: #loop through the names
+                i = names.index(clients[c][2])
+                if names[i] in hit: #check if this mans got hit
                     if time.time() - lastHitTime[i]> 5.5: #actually deal damage to the guy
                         lastHitTime[i] = time.time() #invulnerability
+                        c.write_message("hitted")
                         healths[i] -= 1
                         if healths[i] == 0: #killed someone
                             healths[i] = 0-rank
