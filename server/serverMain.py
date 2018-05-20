@@ -7,7 +7,7 @@ faces = []
 names = []
 healths = []#1,2 or 3 hearts left. once dead, -1
 submitted = []
-hit = []
+hits = []
 kills = []
 lastHitTime = []
 
@@ -20,34 +20,35 @@ klog = ""
 def registerHit(facestuffs):
     global faces, names
     face_locations = face_recognition.face_locations(facestuffs)#figure out the location of faces
-    unknown_encodings = face_recognition.face_encodings(facestuffs,knows_face_locations=face_locations)
+    unknown_encodings = face_recognition.face_encodings(facestuffs,known_face_locations=face_locations)
     found = []
     for i,j in zip(unknown_encodings,face_locations):
-        results = face_recognition.compare_faces(faceData, i, tolerance = 0.4125)
+        results = face_recognition.compare_faces(faces, i, tolerance = 0.4125)
         for k,l in zip(names,results):
             if l:
                 print('hit %s'%k)
                 found.append(k)
     return found
-
-def checkGameEnd():
-    c = 0
-    for k in healths:
-        if k > 0:
-            c += 1
-    if c <2 : #game is ended
-        for c in clients:
-            myi = names.index(clients[c][2])
-            #rank, kills, hits, submitted(fired)
-            c.write_message("endgame rank "+str(-1*rank[myi])+" kills "+str(kills[myi])+" hits "+str(hits[myi])+" submitted "+str(submitted[myi]))
-            stage = "endgame"        
-        
+##
+##def checkGameEnd():
+##    global names, clients, kills, hits, healths, submitted
+##    c = 0
+##    for k in healths:
+##        if k > 0:
+##            c += 1
+##    if c <2 : #game is ended
+##        for c in clients:
+##            myi = names.index(clients[c][2])
+##            #rank, kills, hits, submitted(fired)
+##            c.write_message("endgame rank "+str(-1*healths[myi])+" kills "+str(kills[myi])+" hits "+str(hits[myi])+" submitted "+str(submitted[myi]))
+##            stage = "endgame"        
+##        
                 
 def periodic_callback():
-    global ftimer, ctdtimer, faces, names
+    global ftimer, ctdtimer, faces, names, clients
 
-    checkGameEnd()
-    
+ #   checkGameEnd()
+    #print(names)
     if ftimer > 1:
         ftimer -= 1
         print(ftimer)
@@ -61,7 +62,7 @@ def periodic_callback():
     if len(clients) < 2:
         allFaced = False
     if ftimer == 0 and allFaced:
-        ftimer = 31
+        ftimer = 6 #snatoehunsaoehuasonethu ans.hujmanotehusnaoethuaoehuosaentuhaosnethuasnoetuhsoante
     if not allFaced:
         ftimer = 0
     elif ftimer == 1 and allFaced:
@@ -73,13 +74,13 @@ def periodic_callback():
             names.append(clients[c][2])
             healths.append(3)
             submitted.append(0)
-            hit.append(0)
+            hits.append(0)
             lastHitTime.append(0)
             kills.append(0)
 
             
         ftimer = -1
-        ctdtimer = 11
+        ctdtimer = 3
         print("countdown started")
     if ctdtimer > 1:
         ctdtimer -= 1
@@ -89,7 +90,7 @@ def periodic_callback():
     elif ctdtimer == 1:
         stage = "game"
         ctdtimer-=1
-        print("game started", faces,names)
+        print("game started")
         for c in clients:
             c.write_message("gamestart")        
         
@@ -103,22 +104,30 @@ class wsHandler(tornado.websocket.WebSocketHandler):
             self.write_message("you are too late")
             self.close()
     def on_message(self, message):
-        global ftimer,stage, names, faces, rank
+        global ftimer,stage, names, faces, healths, submitted, hits, lastHitTime, rank
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
         message = pickle.loads(
                 zlib.decompress(message)) #unpacking
         if message[0] == 0:# set sockets links to faces and names
+
+            
             clients[self][1] = face_recognition.face_encodings(message[1])[0]
             clients[self][2] = message[2] #this is the name
+
+            
             ##if 2 guys with face, ftimer = 30
             self.write_message("face registered")
         if message[0] == 1: #this is a picture shot
-            hit = registerHit(clients[self][2],message[1])#returns all the members that were hit
-            submitted[names.index(clients[self][2])] += 1
+            print("received picture shot")
+            hit = registerHit(message[1])#returns all the members that were hit
+            for j in range (len(names)):
+                if names[j] == clients[self][2]:
+                    myi = j
+            submitted[myi] += 1
             if len(hit) > 0:
-                hit[names.index(clients[self][2])] += 1
+                hits[myi] += 1
                 self.write_message("hit")
             rank += len(hit)
             for c in clients: #loop through the names
@@ -133,6 +142,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
                             for c in clients:
                                 c.write_message("kill killed " + names[i] + " killer " + clients[self][2])
                                 klog = klog + clients[self][2] + " killed " + names[i] + "\n"
+                                print(clients[self][2] + " killed " + names[i])
                                 kills[names.index(clients[self][2])] += 1
     def on_close(self):
         del clients[self]
