@@ -100,6 +100,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
         if stage == "fill":
             clients[self] = [client.Client(self),0,None]
             self.write_message(str((0,stage)))
+            print("connected")
         else:
             self.write_message("you are too late")
             self.close()
@@ -131,13 +132,19 @@ class wsHandler(tornado.websocket.WebSocketHandler):
                 self.write_message("hit")
             rank += len(hit)
             for c in clients: #loop through the names
-                i = names.index(clients[c][2])
+                print(clients[self][2])
+ #               i = names.index(clients[c][2])
+                for j in range (len(names)):
+                    if names[j] == clients[self][2]:
+                        i = j
                 if names[i] in hit: #check if this mans got hit
                     if time.time() - lastHitTime[i]> 5.5: #actually deal damage to the guy
                         lastHitTime[i] = time.time() #invulnerability
                         c.write_message("hitted")
+                        print("hit " + names[i] + " " + str(healths[i]))
                         healths[i] -= 1
                         if healths[i] == 0: #killed someone
+                            print("killed "+names[i])
                             healths[i] = 0-rank
                             for c in clients:
                                 c.write_message("kill " + names[i] + clients[self][2])
