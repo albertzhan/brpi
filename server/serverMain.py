@@ -104,7 +104,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
             self.write_message("you are too late")
             self.close()
     def on_message(self, message):
-        global ftimer,stage, names, faces, healths, submitted, hits, lastHitTime, rank
+        global ftimer,stage, names, faces, healths, submitted, hits, lastHitTime, rank, klog
         ##first char determines types of messages:
         ##0training picture + name
         ##1picture "shots"
@@ -140,7 +140,7 @@ class wsHandler(tornado.websocket.WebSocketHandler):
                         if healths[i] == 0: #killed someone
                             healths[i] = 0-rank
                             for c in clients:
-                                c.write_message("kill killed " + names[i] + " killer " + clients[self][2])
+                                c.write_message("kill " + names[i] + clients[self][2])
                                 klog = klog + clients[self][2] + " killed " + names[i] + "\n"
                                 print(clients[self][2] + " killed " + names[i])
                                 kills[names.index(clients[self][2])] += 1
