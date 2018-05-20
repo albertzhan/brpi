@@ -5,7 +5,7 @@ from pygame import *
 import time as tm
 init()
 font.init()
-websocket = websocket.WebSocket("ws://192.168.137.102:8888/brpi")
+websocket = websocket.WebSocket("ws://192.168.43.24:8888/brpi")
 running = True
 screen = display.set_mode((720,480))
 cam = cv2.VideoCapture(0)
