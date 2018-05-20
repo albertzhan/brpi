@@ -13,23 +13,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<img src = "Website_pg1.png" style = "position:absolute;top:calc(50vh - 302px);left:calc(50vw - 500px);width:1000px;" id = "bg" />
+<img src = "Website_pg1.png" style = "position:absolute;top:0;left:0;width:100vw;height:100vh;" id = "bg" />
 </body>
 </html>
 
 <script>
 $(document).ready(function(){
-	var x = 275;
-	var y = 245;
-	var offset = $("#bg").offset();
-	var mx = 0;
-	var my = 0;
 	var overbutton = false;
 	$( document ).on( "mousemove", function( e ) {
+		var x = 0.275*$(window).width();
+		var y = 0.406*$(window).height();
+		console.log(x + " " + y);
+		var mx = 0;
+		var my = 0;
+		var offset = $("#bg").offset();
   		mx = (e.pageX - offset.left);
 		my = (e.pageY - offset.top);
 		$("#bg").attr("src","Website_pg1.png");
-		if(mx >= x && mx <= x+485 && my >= y && my <= y+140){
+		console.log(mx+ " " + my);
+		if(mx >= x && mx <= x+(0.485*$(window).width()) && my >= y && my <= y+(0.232*$(window).height())){
 			overbutton = true;
 			$("#bg").attr("src","Website_pg2.png");
 		}
@@ -37,7 +39,7 @@ $(document).ready(function(){
 	});
 	$("#bg").click(function(){
 		if(overbutton){
-			window.location.href = "https://github.com/albertzhan/brpi";
+			window.location.href = "https://github.com/albertzhan/brpi/archive/master.zip";
 		}
 	});
 });
