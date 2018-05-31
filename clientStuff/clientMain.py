@@ -5,7 +5,7 @@ from pygame import *
 import time as tm
 init()
 font.init()
-websocket = websocket.WebSocket("ws://192.168.43.24:8888/brpi")
+websocket = websocket.WebSocket("ws://192.168.137.102:8888/brpi")
 running = True
 screen = display.set_mode((720,480))
 cam = cv2.VideoCapture(0)
@@ -60,8 +60,9 @@ while running: #this will keep trying to connect the websocket if the websocket 
                 elif tDat[0] == 'gamestart':
                     stage =4
                 elif tDat[0] == 'kill':
-                    killQueue.append((tDat[0], tDat[1],60))
+                    killQueue.append([tDat[0], tDat[1],60])
                 elif tDat[0] == 'hitted':
+                    print('hitted')
                     isHit = 150
                     lives-=1
                 elif tDat[0] == 'hit':
@@ -169,7 +170,7 @@ while running: #this will keep trying to connect the websocket if the websocket 
                         if killQueue[0][0] == name:
                             stage = 5
                             dead = True
-                        killText = buttonFont.render('%-10s killed %10s'%(killQueue[0][1], killQueue[0][0]), True, (255,255,255),(130,130,230))
+                        killText = buttonFont.render('%-10s killed %10s'%(killQueue[0][2], killQueue[0][1]), True, (255,255,255),(130,130,230))
                         screen.blit(killText,(360-killText.get_width()//2, 0))
                         killQueue[0][2]-=1
                     else:
